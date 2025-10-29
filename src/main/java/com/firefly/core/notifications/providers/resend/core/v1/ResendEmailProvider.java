@@ -15,13 +15,13 @@
  */
 
 
-package com.firefly.core.notifications.provider.resend.core.v1;
+package com.firefly.core.notifications.providers.resend.core.v1;
 
 import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailAttachmentDTO;
 import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailRequestDTO;
 import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailResponseDTO;
 import com.firefly.core.notifications.interfaces.interfaces.providers.email.v1.EmailProvider;
-import com.firefly.core.notifications.provider.resend.properties.v1.ResendProperties;
+import com.firefly.core.notifications.providers.resend.properties.v1.ResendProperties;
 import com.firefly.common.client.RestClient;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

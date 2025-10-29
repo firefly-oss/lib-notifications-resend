@@ -15,11 +15,11 @@
  */
 
 
-package com.firefly.core.notifications.provider.resend.config.v1;
+package com.firefly.core.notifications.providers.resend.config.v1;
 
 import com.firefly.common.client.RestClient;
 import com.firefly.common.client.ServiceClient;
-import com.firefly.core.notifications.provider.resend.properties.v1.ResendProperties;
+import com.firefly.core.notifications.providers.resend.properties.v1.ResendProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
