@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,10 +47,6 @@ class ResendEmailProviderTest {
             return p;
         }
 
-        @Bean
-        WebClient resendWebClient(ResendProperties props) {
-            return WebClient.builder().baseUrl(props.getBaseUrl()).build();
-        }
 
     }
 

@@ -17,26 +17,21 @@
 
 package com.firefly.core.notifications.provider.resend.config.v1;
 
+import com.firefly.common.client.RestClient;
+import com.firefly.common.client.ServiceClient;
 import com.firefly.core.notifications.provider.resend.properties.v1.ResendProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ResendConfig {
 
     @Bean
-    public WebClient resendWebClient(ResendProperties properties) {
-        return WebClient.builder()
+    public RestClient resendRestClient(ResendProperties properties) {
+        return ServiceClient.rest("resend")
                 .baseUrl(properties.getBaseUrl())
-                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + properties.getApiKey())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(c -> c.defaultCodecs().maxInMemorySize(4 * 1024 * 1024))
-                        .build())
+                .jsonContentType()
+                .defaultHeader("Authorization", "Bearer " + properties.getApiKey())
                 .build();
     }
 }

@@ -31,10 +31,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- WebClient for calling Resend API -->
+        <!-- Firefly common REST client -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <groupId>com.firefly</groupId>
+            <artifactId>lib-common-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

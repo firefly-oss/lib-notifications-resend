@@ -22,13 +22,12 @@ import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailRequestDTO;
 import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailResponseDTO;
 import com.firefly.core.notifications.interfaces.interfaces.providers.email.v1.EmailProvider;
 import com.firefly.core.notifications.provider.resend.properties.v1.ResendProperties;
+import com.firefly.common.client.RestClient;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -42,18 +41,15 @@ public class ResendEmailProvider implements EmailProvider {
     private ResendProperties properties;
 
     @Autowired
-    private WebClient resendWebClient;
+    private RestClient resendClient;
 
     @Override
     public Mono<EmailResponseDTO> sendEmail(EmailRequestDTO request) {
         return Mono.fromCallable(() -> buildPayload(request))
-                .flatMap(payload -> resendWebClient
-                        .post()
-                        .uri("/emails")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(payload)
-                        .retrieve()
-                        .bodyToMono(ResendSendResponse.class))
+                .flatMap(payload -> resendClient
+                        .post("/emails", ResendSendResponse.class)
+                        .withBody(payload)
+                        .execute())
                 .map(resp -> EmailResponseDTO.success(resp.getId()))
                 .onErrorResume(ex -> {
                     log.error("Error sending email via Resend", ex);
