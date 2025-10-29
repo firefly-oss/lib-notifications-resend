@@ -17,18 +17,90 @@
 
 package com.firefly.core.notifications.provider.resend.core.v1;
 
+import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailAttachmentDTO;
 import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailRequestDTO;
 import com.firefly.core.notifications.interfaces.dtos.email.v1.EmailResponseDTO;
 import com.firefly.core.notifications.interfaces.interfaces.providers.email.v1.EmailProvider;
+import com.firefly.core.notifications.provider.resend.properties.v1.ResendProperties;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
+import java.util.*;
+
+@Slf4j
 @Component
 public class ResendEmailProvider implements EmailProvider {
 
+    @Autowired
+    private ResendProperties properties;
+
+    @Autowired
+    private WebClient resendWebClient;
+
     @Override
     public Mono<EmailResponseDTO> sendEmail(EmailRequestDTO request) {
-        // Placeholder implementation. Replace with actual Resend client usage.
-        return Mono.just(EmailResponseDTO.error("Resend provider not yet implemented"));
+        return Mono.fromCallable(() -> buildPayload(request))
+                .flatMap(payload -> resendWebClient
+                        .post()
+                        .uri("/emails")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(payload)
+                        .retrieve()
+                        .bodyToMono(ResendSendResponse.class))
+                .map(resp -> EmailResponseDTO.success(resp.getId()))
+                .onErrorResume(ex -> {
+                    log.error("Error sending email via Resend", ex);
+                    return Mono.just(EmailResponseDTO.error(ex.getMessage()));
+                })
+                .subscribeOn(Schedulers.boundedElastic());
+    }
+
+    private Map<String, Object> buildPayload(EmailRequestDTO req) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        String from = StringUtils.hasText(req.getFrom()) ? req.getFrom() : properties.getDefaultFrom();
+        body.put("from", from);
+        body.put("to", req.getTo());
+        body.put("subject", req.getSubject());
+        if (StringUtils.hasText(req.getHtml())) {
+            body.put("html", req.getHtml());
+        }
+        if (StringUtils.hasText(req.getText())) {
+            body.put("text", req.getText());
+        }
+        if (req.getCc() != null && !req.getCc().isEmpty()) {
+            body.put("cc", req.getCc());
+        }
+        if (req.getBcc() != null && !req.getBcc().isEmpty()) {
+            body.put("bcc", req.getBcc());
+        }
+        if (req.getAttachments() != null && !req.getAttachments().isEmpty()) {
+            List<Map<String, Object>> atts = new ArrayList<>();
+            for (EmailAttachmentDTO a : req.getAttachments()) {
+                if (a == null || a.getContent() == null || a.getContent().length == 0) continue;
+                Map<String, Object> att = new HashMap<>();
+                att.put("filename", a.getFilename());
+                att.put("content", Base64.getEncoder().encodeToString(a.getContent()));
+                if (StringUtils.hasText(a.getContentType())) {
+                    att.put("content_type", a.getContentType());
+                }
+                atts.add(att);
+            }
+            if (!atts.isEmpty()) {
+                body.put("attachments", atts);
+            }
+        }
+        return body;
+    }
+
+    @Data
+    static class ResendSendResponse {
+        private String id;
     }
 }

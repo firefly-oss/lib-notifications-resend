@@ -1,0 +1,4 @@
+com/firefly/core/notifications/provider/resend/config/v1/ResendConfig.class
+com/firefly/core/notifications/provider/resend/core/v1/ResendEmailProvider.class
+com/firefly/core/notifications/provider/resend/properties/v1/ResendProperties.class
+com/firefly/core/notifications/provider/resend/core/v1/ResendEmailProvider$ResendSendResponse.class

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.091 s -- in com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest

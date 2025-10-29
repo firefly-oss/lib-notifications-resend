@@ -27,4 +27,6 @@ import org.springframework.context.annotation.Configuration;
 public class ResendProperties {
     private String apiKey;
     private String defaultFrom;
+    /** Base URL for Resend API (override in tests). Defaults to https://api.resend.com */
+    private String baseUrl = "https://api.resend.com";
 }
