@@ -1,4 +1,29 @@
 -------------------------------------------------------------------------------
 Test set: com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.162 s -- in com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest
+Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.940 s <<< FAILURE! -- in com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest
+com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest.sendEmail_withAttachments -- Time elapsed: 0.014 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual:
+  {"from"="noreply@example.com", "html"="<b>World</b>", "subject"="Hello", "to"="user@example.com"}
+to contain key:
+  "attachments"
+	at com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest.sendEmail_withAttachments(ResendEmailProviderTest.java:128)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest.sendEmail_withCcAndBcc -- Time elapsed: 0.006 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual:
+  {"attachments"=[{"content"="ZmFrZS1wZGYtY29udGVudA==", "content_type"="application/pdf", "filename"="invoice.pdf"},
+    {"content"="ZmFrZS1pbWFnZS1jb250ZW50", "content_type"="image/png", "filename"="logo.png"}], "from"="noreply@example.com", "html"="<p>Please find your invoice attached.</p>", "subject"="Invoice with attachments", "text"="Please find your invoice attached.", "to"="customer@example.com"}
+to contain key:
+  "cc"
+	at com.firefly.core.notifications.provider.resend.core.v1.ResendEmailProviderTest.sendEmail_withCcAndBcc(ResendEmailProviderTest.java:169)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

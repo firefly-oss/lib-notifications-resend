@@ -27,10 +27,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-@ConditionalOnProperty(prefix = "resend", name = "api-key")
+@ConditionalOnProperty(prefix = "notifications.email", name = "provider", havingValue = "resend")
 public class ResendConfig {
 
     @Bean
+    @ConditionalOnProperty(prefix = "resend", name = "api-key")
     public RestClient resendRestClient(ResendProperties properties) {
         log.info("Initializing Resend email provider with base URL: {}", properties.getBaseUrl());
         return ServiceClient.rest("resend")
