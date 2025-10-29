@@ -20,14 +20,19 @@ package com.firefly.core.notifications.provider.resend.config.v1;
 import com.firefly.common.client.RestClient;
 import com.firefly.common.client.ServiceClient;
 import com.firefly.core.notifications.provider.resend.properties.v1.ResendProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
+@ConditionalOnProperty(prefix = "resend", name = "api-key")
 public class ResendConfig {
 
     @Bean
     public RestClient resendRestClient(ResendProperties properties) {
+        log.info("Initializing Resend email provider with base URL: {}", properties.getBaseUrl());
         return ServiceClient.rest("resend")
                 .baseUrl(properties.getBaseUrl())
                 .jsonContentType()
